@@ -1,0 +1,25 @@
+{
+  "name": "software-ci-cd",
+  "version": "1.0.0",
+  "description": "Minimal Express API",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://dungkt91@github.com/dungkt91/software_ci_cd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dungkt91/software_ci_cd/issues"
+  },
+  "homepage": "https://github.com/dungkt91/software_ci_cd#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
