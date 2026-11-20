@@ -24,6 +24,19 @@ jobs:
       - name: Syntax check
         run: node --check src/index.js
 
+      - name: Build Docker image
+        run: docker build -t software-ci-cd:${{ github.sha }} .
+
+      - name: Smoke test Docker image
+        run: |
+          docker run -d --name app -p 3000:3000 software-ci-cd:${{ github.sha }}
+          for i in $(seq 1 15); do
+            curl -fs http://localhost:3000/health && exit 0
+            sleep 1
+          done
+          docker logs app
+          exit 1
+
       # Enable once real tests exist. The current "test" script always fails.
       # - name: Run tests
       #   run: npm test
