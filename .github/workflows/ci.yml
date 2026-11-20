@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v5
 
@@ -36,6 +39,20 @@ jobs:
           done
           docker logs app
           exit 1
+
+      # Publish only from main, never from pull requests.
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Push Docker image to GHCR
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
+          docker tag software-ci-cd:${{ github.sha }} $IMAGE:${{ github.sha }}
+          docker tag software-ci-cd:${{ github.sha }} $IMAGE:latest
+          docker push $IMAGE:${{ github.sha }}
+          docker push $IMAGE:latest
 
       # Enable once real tests exist. The current "test" script always fails.
       # - name: Run tests
